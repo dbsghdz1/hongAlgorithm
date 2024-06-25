@@ -1,3 +1,4 @@
+
 import Foundation
 
 func solution(_ k: Int, _ dungeons: [[Int]]) -> Int {
@@ -5,7 +6,7 @@ func solution(_ k: Int, _ dungeons: [[Int]]) -> Int {
   
   func permutations(_ nums: [[Int]], _ arr: inout [[Int]], _ used: inout [Bool]) {
     if arr.count == nums.count {
-      maxVal = max(maxVal, check(k, arr))
+      maxVal = max(maxVal, countDungeons(k, arr))
       return
     }
     
@@ -21,7 +22,7 @@ func solution(_ k: Int, _ dungeons: [[Int]]) -> Int {
     }
   }
   
-  func check(_ k: Int, _ dungeons: [[Int]]) -> Int {
+  func countDungeons(_ k: Int, _ dungeons: [[Int]]) -> Int {
     var blood = k
     var cnt = 0
     for dungeon in dungeons {
@@ -37,10 +38,9 @@ func solution(_ k: Int, _ dungeons: [[Int]]) -> Int {
     return cnt
   }
   
-  var arr: [[Int]] = []
+  var arr: [[Int]] = [[]]
   var used: [Bool] = Array(repeating: false, count: dungeons.count)
   permutations(dungeons, &arr, &used)
   
   return maxVal
 }
-
