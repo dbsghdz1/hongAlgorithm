@@ -1,38 +1,37 @@
 let input = readLine()!
 
-var reversedArr: [[Character]] = [[]]
-var cArr: [Character] = []
+var buffer: [Character] = []
 var answer = ""
-var flag = false
+var isTag = false
 
-for i in input {
-    if i == ">" {
-        cArr.append(i)
-        answer += String(cArr)
-        cArr = []
-        flag = false
-        continue
-    } else if i == " " && !flag {
-        answer += String(cArr.reversed())
-        answer += " "
-        cArr = []
-        continue
-    } else if i == "<" {
-        flag = true
-        if !cArr.isEmpty {
-            answer += String(cArr.reversed())
-            cArr = []
-        }
-    } 
-    cArr.append(i)
+func flush(reverse: Bool) {
+    if reverse {
+        answer += String(buffer.reversed())
+    } else {
+        answer += String(buffer)
+    }
+    buffer.removeAll()
 }
 
-if !cArr.isEmpty {
-    if flag {
-        answer += String(cArr)
-    } else {
-        answer += String(cArr.reversed())
-    }
+for ch in input {
+    if ch == "<" {
+        isTag = true
+        if !buffer.isEmpty {
+            flush(reverse: isTag)
+        }
+        buffer.append(ch)
+    } else if ch == ">" {
+        isTag = false
+        buffer.append(ch)
+        flush(reverse: isTag)
+    } else if ch == " " && !isTag {
+        flush(reverse: true)
+        answer.append(" ")
+    } else { buffer.append(ch) }
+}
+
+if !buffer.isEmpty {
+    flush(reverse: !isTag)
 }
 
 print(answer)
