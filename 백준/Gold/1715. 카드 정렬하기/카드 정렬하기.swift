@@ -9,9 +9,8 @@ struct MinHeap {
         
         while i > 0 {
             let p = (i - 1) / 2
-            
-            if heap[i] > heap[p] { break }
-            heap.swapAt(i, p)
+            if heap[p] <= heap[i] { break }
+            heap.swapAt(p, i)
             i = p
         }
     }
@@ -33,10 +32,15 @@ struct MinHeap {
             if r < heap.count && heap[r] < heap[s] { s = r }
             
             if s == i { break }
+            
             heap.swapAt(s, i)
             i = s
         }
         return min
+    }
+    
+    var count: Int {
+        heap.count
     }
 }
 
@@ -44,18 +48,17 @@ let N = Int(readLine()!)!
 var h = MinHeap()
 
 for _ in 0..<N {
-    let x = Int(readLine()!)!
-    h.push(x)
+    h.push(Int(readLine()!)!)
 }
 
 var answer = 0
-
-while h.heap.count > 1 {
-    let a = h.pop()!
-    let b = h.pop()!
-    let s = a + b
-    answer += s
-    h.push(s)
+while h.count > 1 {
+    let a = h.pop() ?? 0
+    let b = h.pop() ?? 0
+    let sum = a + b
+    answer += sum
+    h.push(sum)
 }
 
 print(answer)
+
