@@ -7,22 +7,21 @@ arr.sort()
 let M = Int(readLine()!)!
 let targets = readLine()!.split(separator: " ").map { Int($0)! }
 
-func exists(_ x: Int) -> Bool {
+for x in targets {
     var l = 0
     var r = arr.count - 1
-    
+    var flag = false
     while l <= r {
-        let mid = (l + r) / 2
-        if arr[mid] == x { return true }
-        if arr[mid] < x {
-            l = mid + 1
+        var mid = (l + r) / 2
+        
+        if arr[mid] == x { 
+            flag = true
+            break
+        } else if arr[mid] < x {
+            l = mid + 1 
         } else {
             r = mid - 1
         }
     }
-    return false
-}
-
-for t in targets {
-    print(exists(t) ? 1 : 0)
+    print(flag ? 1 : 0)
 }
