@@ -1,22 +1,47 @@
 import Foundation
 
 let N = Int(readLine()!)!
-let cards = readLine()!.split(separator: " ").map { Int($0)! }
+var arr = readLine()!.split(separator: " ").map { Int($0)! }
+arr.sort()
 
 let M = Int(readLine()!)!
-let queries = readLine()!.split(separator: " ").map { Int($0)! }
+let targets = readLine()!.split(separator: " ").map { Int($0)! }
 
-var freq: [Int: Int] = [:]
+func lowerBound(_ x: Int) -> Int {
+    var l = 0
+    var r = arr.count
+    
+    while l < r {
+        let mid = (l + r) / 2
+        if arr[mid] < x {
+            l = mid + 1
+        } else {
+            r = mid
+        }
+    }
+    return l
+}
 
-for x in cards {
-    freq[x, default: 0] += 1
+
+func upperBound(_ x: Int) -> Int {
+    var l = 0
+    var r = arr.count
+    
+    while l < r {
+        let mid = (l + r) / 2
+        if arr[mid] <= x {
+            l = mid + 1
+        } else {
+            r = mid
+        }
+    }
+    return l
 }
 
 var out = ""
-out.reserveCapacity(M * 2)
-
-for q in queries {
-    out += "\(freq[q, default: 0]) "
+for x in targets {
+    let count = upperBound(x) - lowerBound(x)
+    out += "\(count) "
 }
 
-print(out.trimmingCharacters(in: .whitespaces))
+print(out)
