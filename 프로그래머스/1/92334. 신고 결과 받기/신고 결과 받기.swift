@@ -1,38 +1,44 @@
-func solution(_ id_list: [String], _ report: [String], _ k: Int) -> [Int] {
-    var idDict: [String: Int] = [:] // 사용자별 신고 횟수 저장
-    var reportDict: [String: Set<String>] = [:] // 사용자가 신고한 사용자 목록 저장
-    var reportCountDict: [String: Int] = [:] // 신고당한 횟수 저장
-    var answer: [Int] = []
+import Foundation
 
-    for i in id_list {
-        idDict[i] = 0
+func solution(_ id_list:[String], _ report:[String], _ k:Int) -> [Int] {
+    var users: [String: [String]] = [:]
+    var reports: [String: Int] = [:]
+    var block = Set<String>()
+    var answerArr = [Int]()
+    
+    for id in id_list {
+        users[id] = []
     }
-
-    for i in report {
-        var arr = i.components(separatedBy: " ")
-        var n1 = arr[0]
-        var n2 = arr[1]
+    
+    for r in report {
+        let a = r.split(separator: " ")
+        let user = String(a[0])
+        let target = String(a[1])
         
-        reportDict[n1, default: []].insert(n2)
-    }
-
-    for (n1, n2) in reportDict {
-        for n3 in n2 {
-            reportCountDict[n3, default: 0] += 1
+        var arr = users[user] ?? []
+            if !arr.contains(target) {
+            arr.append(target)
+            users[user] = arr
+            let cnt = reports[target] ?? 0
+            reports[target] = cnt + 1
         }
     }
-
-    for (n1, n2) in reportDict {
-        for n3 in n2 {
-            if reportCountDict[n3]! >= k {
-                idDict[n1]! += 1
+    
+    for r in reports.keys {
+        if reports[r]! >= k {
+            block.insert(r)
+        }
+    }
+    
+    for id in id_list {
+        var answer = 0
+        for u in users[id]! {
+            if block.contains(u) {
+                answer += 1
             }
         }
+        answerArr.append(answer)
     }
-
-    for id in id_list {
-        answer.append(idDict[id]!)
-    }
-
-    return answer
+    
+    return answerArr
 }
