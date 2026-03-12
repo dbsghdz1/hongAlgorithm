@@ -1,7 +1,5 @@
 def solution(n):
-    answer = 0
-    num = n 
-    while num > 0:
-        answer += num % 10
-        num //= 10
-    return answer
+    if n < 10: 
+        return n
+    return n % 10 + solution(n // 10)
+
