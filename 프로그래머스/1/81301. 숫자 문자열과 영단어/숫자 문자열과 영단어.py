@@ -1,5 +1,5 @@
 def solution(s):
-    dict = {
+    num_dic = {
         'zero': '0',
         'one': '1',
         'two': '2',
@@ -12,19 +12,7 @@ def solution(s):
         'nine': '9'
     }
     
-    str = ''
-    answer = ''
-    for ss in s:
-        if ss.isdecimal() == False:
-            str += ss
-        else:
-            if str in dict:
-                answer = answer + dict[str] + ss
-                str = ''
-            else:
-                answer = answer + ss
-                str = ''
-        if str in dict:
-            answer += dict[str]
-            str = ''
+    answer = s
+    for key, value in num_dic.items():
+        answer = answer.replace(key, value)
     return int(answer)
