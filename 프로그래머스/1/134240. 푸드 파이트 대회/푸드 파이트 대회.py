@@ -1,16 +1,7 @@
 def solution(food):
-    answer = ''
-    result = ''
+    left = ''
     
-    for (i, f) in enumerate(food):
-        if i == 0:
-            continue
+    for i in range(1, len(food)):
+        left += str(i) * (food[i]//2)
         
-        if f > 1:
-            for _ in range(f//2):
-                result += str(i)
-    
-    for r in result:
-        answer = r + answer
-    result = result + '0' + answer
-    return result
+    return left + '0' + left[::-1]
