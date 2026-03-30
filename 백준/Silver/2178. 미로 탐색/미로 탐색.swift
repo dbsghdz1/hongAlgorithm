@@ -1,40 +1,37 @@
 import Foundation
 
 let nm = readLine()!.split(separator: " ").map { Int($0)! }
-let N = nm[0]
-let M = nm[1]
+let n = nm[0], m = nm[1]
 
-var grid = Array(repeating: Array(repeating: 0, count: M), count: N)
-for i in 0..<N {
-    let line = Array(readLine()!)
-    for j in 0..<M {
-        grid[i][j] = (line[j] == "1") ? 1 : 0
-    }
+var graph: [[Int]] = []
+
+for _ in 0..<n {
+    let row = readLine()!.map { Int(String($0))! }
+    graph.append(row)
 }
 
-let dx = [1, -1, 0, 0]
-let dy = [0, 0, 1, -1]
+let dx = [-1, 1, 0, 0]
+let dy = [0, 0, -1, 1]
 
-var dist = Array(repeating: Array(repeating: 0, count: M), count: N)
-var queue: [(Int, Int)] = [(0, 0)]
-var head = 0
+var dist = Array(repeating: Array(repeating: 0, count: m), count: n)
 dist[0][0] = 1
+var queue = [(0, 0)]
+var index = 0
 
-while head < queue.count {
-    let (y, x) = queue[head]
-    head += 1
-
+while index < queue.count {
+    let (x, y) = queue[index]
+    index += 1
     for k in 0..<4 {
-        let ny = y + dy[k]
         let nx = x + dx[k]
-
-        if ny < 0 || ny >= N || nx < 0 || nx >= M { continue }
-        if grid[ny][nx] == 0 { continue }
-        if dist[ny][nx] != 0 { continue }
-
-        dist[ny][nx] = dist[y][x] + 1
-        queue.append((ny, nx))
+        let ny = y + dy[k]
+        
+        if nx >= 0 && nx < n && ny >= 0 && ny < m {
+            if graph[nx][ny] != 0 && dist[nx][ny] == 0 {
+                queue.append((nx, ny))
+                dist[nx][ny] = dist[x][y] + 1
+            }
+        }
     }
 }
 
-print(dist[N-1][M-1])
+print(dist[n-1][m-1])
