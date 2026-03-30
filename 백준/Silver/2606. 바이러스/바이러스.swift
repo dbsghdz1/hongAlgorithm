@@ -1,32 +1,32 @@
 import Foundation
 
-let N = Int(readLine()!)!
-let M = Int(readLine()!)!
+let n = Int(readLine()!)!
+let m = Int(readLine()!)!
 
-var graph = Array(repeating: [Int](), count: N + 1)
+var graph = Array(repeating: [Int](), count: n + 1)
 
-for _ in 0..<M {
-    let edge = readLine()!.split(separator: " ").map { Int($0)! }
-    let a = edge[0]
-    let b = edge[1]
-
-    graph[a].append(b)
-    graph[b].append(a)
+for _ in 0..<m {
+    let input = readLine()!.split(separator: " ").map { Int($0)! }
+    let u = input[0]
+    let v = input[1]
+    
+    graph[u].append(v)
+    graph[v].append(u)
 }
 
-var visited = Array(repeating: false, count: N + 1)
 var answer = 0
-func dfs(_ node: Int) {
-    visited[node] = true
-    
-    for next in graph[node] {
-        if !visited[next] {
-            dfs(next)
+var visited = Array(repeating: false, count: n + 1)
+
+func dfs(start: Int) {
+    visited[start] = true
+    for g in graph[start] {
+        if !visited[g] {
             answer += 1
+            dfs(start: g)
         }
     }
 }
 
-dfs(1)
+dfs(start: 1)
 
 print(answer)
