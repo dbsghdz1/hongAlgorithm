@@ -1,57 +1,62 @@
 import Foundation
 
 let first = readLine()!.split(separator: " ").map { Int($0)! }
-let N = first[0]
-let M = first[1]
-let V = first[2]
+let n = first[0]
+let m = first[1]
+let v = first[2]
 
-var graph = Array(repeating: [Int](), count: N + 1)
+var edges: [(Int, Int)] = []
 
-for _ in 0..<M {
-    let e = readLine()!.split(separator: " ").map { Int($0)! }
-    let u = e[0]
-    let v = e[1]
-    graph[u].append(v)
-    graph[v].append(u)
+for _ in 0..<m {
+    let line = readLine()!.split(separator: " ").map { Int($0)! }
+    let a = line[0]
+    let b = line[1]
+    edges.append((a, b))
 }
 
-for i in 1...N {
+var graph = Array(repeating: [Int](), count: n + 1)
+
+for (a, b) in edges {
+    graph[a].append(b)
+    graph[b].append(a)
+}
+
+for i in 1...n {
     graph[i].sort()
 }
-
-var visited = Array(repeating: false, count: N + 1)
-var visited2 = Array(repeating: false, count: N + 1)
+var visited = Array(repeating: false, count: n + 1)
 
 func dfs(_ node: Int) {
     visited[node] = true
     print(node, terminator: " ")
-    for next in graph[node] {
-        if !visited[next] {
-            dfs(next)
+    
+    for nx in graph[node] {
+        if !visited[nx] {
+            dfs(nx)
         }
     }
 }
 
-func bfs(_ start: Int) {
-    var queue = [Int]()
-    var head = 0
-    queue.append(start)
-    visited2[start] = true
+var visited2 = Array(repeating: false, count: n + 1)
 
+func bfs(value: Int) {
+    var queue = [value]
+    visited2[value] = true
+    var head = 0
+    
     while head < queue.count {
         let cur = queue[head]
-        head += 1
-
         print(cur, terminator: " ")
-        for next in graph[cur] {
-            if !visited2[next] {
-                visited2[next] = true
-                queue.append(next)
+        head += 1
+        
+        for nx in graph[cur] {
+            if !visited2[nx] {
+                visited2[nx] = true
+                queue.append(nx)
             }
         }
     }
 }
-
-dfs(V)
+dfs(v)
 print()
-bfs(V)
+bfs(value: v)
