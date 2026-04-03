@@ -3,67 +3,6 @@ let m = Int(readLine()!)!
 
 var graph = Array(repeating: [(Int, Int)](), count: n + 1)
 
-struct MinHeap {
-    var heap: [(Int, Int)] = []
-    
-    var isEmpty: Bool {
-        return heap.isEmpty
-    }
-    
-    mutating func push(_ value: (Int, Int)) {
-        heap.append(value)
-        siftUp(from: heap.count - 1)
-    }
-    
-    mutating func pop() -> (Int, Int)? {
-        if heap.isEmpty { return nil }
-        
-        if heap.count == 1 {
-            return heap.removeLast()
-        }
-        
-        let root = heap[0]
-        heap[0] = heap.removeLast()
-        siftDown(from: 0)
-        
-        return root
-    }
-    
-    mutating func siftUp(from index: Int) {
-        var child = index
-        var parent = (child - 1) / 2
-        
-        while child > 0 && heap[child].0 < heap[parent].0 {
-            heap.swapAt(child, parent)
-            child = parent
-            parent = (child - 1) / 2
-        }
-    }
-    
-    mutating func siftDown(from index: Int) {
-        var parent = index
-        
-        while true {
-            let left = parent * 2 + 1
-            let right = parent * 2 + 2
-            var smallest = parent
-            
-            if left < heap.count && heap[left].0 < heap[smallest].0 {
-                smallest = left
-            }
-            
-            if right < heap.count && heap[right].0 < heap[smallest].0 {
-                smallest = right
-            }
-            
-            if smallest == parent { break }
-            
-            heap.swapAt(parent, smallest)
-            parent = smallest
-        }
-    }
-}
-
 for _ in 0..<m {
     let input = readLine()!.split(separator: " ").map { Int($0)! }
     let a = input[0]
@@ -77,23 +16,75 @@ let last = readLine()!.split(separator: " ").map { Int($0)! }
 let start = last[0]
 let end = last[1]
 
+struct minHeap {
+    var queue = [(Int, Int)]()
+    
+    mutating func push(_ x: (Int, Int)) {
+        queue.append(x)
+        var i = queue.count - 1
+        
+        while i > 0 {
+            let p = (i - 1) / 2
+            
+            if queue[i].0 >= queue[p].0 { break }
+            
+            queue.swapAt(i, p)
+            i = p
+        }
+        
+        
+    }
+    
+    mutating func pop() -> (Int, Int)? {
+        if queue.isEmpty { return nil }
+        if queue.count == 1 { return queue.removeLast() }
+        
+        let min = queue[0]
+        queue[0] = queue.removeLast()
+        
+        var i = 0
+        
+        while true {
+            let l = i * 2 + 1
+            let r = i * 2 + 2
+            var c = i
+            
+            if l < queue.count && queue[l].0 < queue[c].0 {
+                c = l
+            }
+            
+            if r < queue.count && queue[r].0 < queue[c].0 {
+                c = r 
+            }
+            
+            if c == i { break }
+            
+            queue.swapAt(i, c)
+            i = c
+        }
+        
+        return min
+    }
+    
+    func isEmpty() -> Bool {
+        return queue.isEmpty
+    }
+}
+
+var mh = minHeap()
+
 var dist = Array(repeating: Int.max, count: n + 1)
+mh.push((0, start))
 dist[start] = 0
 
-var pq = MinHeap()
-pq.push((0, start))
-
-while !pq.isEmpty {
-    let (cost, cur) = pq.pop()!
+while !mh.isEmpty() {
+    guard let (w, cur) = mh.pop() else { break }
+    if dist[cur] < w { continue }
     
-    if dist[cur] < cost { continue }
-    
-    for (next, weight) in graph[cur] {
-        let newCost = cost + weight
-        
-        if newCost < dist[next] {
-            dist[next] = newCost
-            pq.push((newCost, next))
+    for (nx, weight) in graph[cur] {
+        if w + weight < dist[nx] {
+            dist[nx] = w + weight
+            mh.push((weight + w, nx))
         }
     }
 }
